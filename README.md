@@ -128,9 +128,3 @@ This project is licensed under the MIT License.
 - Icons by [Font Awesome](https://fontawesome.com/)
 - Styling with [Tailwind CSS](https://tailwindcss.com/)
 - Book images from [Unsplash](https://unsplash.com/)
-
-## Contact
-
-Samiha Akter
-
-Project Link: [Live Link](https://book-recommender-gray-eta.vercel.app/)
