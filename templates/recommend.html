@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Recommendations</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body class="bg-gray-100">
+    <!-- Navigation -->
+    <nav class="bg-green-800 text-white shadow-lg">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <a href="/" class="text-2xl font-bold">BookVault</a>
+
+                <div class="md:hidden">
+                    <button id="menu-toggle" class="text-white focus:outline-none">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+
+                <div class="hidden md:flex space-x-6">
+                    <a href="/" class="hover:text-green-300 transition duration-300">Home</a>
+                    <a href="#" class="hover:text-green-300 transition duration-300">Categories</a>
+                    <a href="/recommend" class="hover:text-green-300 transition duration-300">Recommender</a>
+                    <a href="#" class="hover:text-green-300 transition duration-300">Top Rated</a>
+                    <a href="#" class="hover:text-green-300 transition duration-300">Contact</a>
+                </div>
+            </div>
+
+            <div id="mobile-menu" class="hidden md:hidden pb-4">
+                <a href="/" class="block py-2 hover:text-green-300">Home</a>
+                <a href="#" class="block py-2 hover:text-green-300">Categories</a>
+                <a href="/recommend" class="block py-2 hover:text-green-300">Recommender</a>
+                <a href="#" class="block py-2 hover:text-green-300">Top Rated</a>
+                <a href="#" class="block py-2 hover:text-green-300">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Recommendation Form Section -->
+    <div class="container mx-auto px-4 py-12">
+        <div class="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-md">
+            <h2 class="text-3xl font-bold text-center mb-6">Find Similar Books</h2>
+            <p class="text-gray-600 text-center mb-8">Enter a book you enjoy to get personalized recommendations</p>
+            
+            <form action="/recommend_books" method="POST">
+                <div class="mb-6">
+                    <label for="book-input" class="block text-gray-700 mb-2">Book Title</label>
+                    <input 
+                        type="text" 
+                        id="book-input" 
+                        name="user_input" 
+                        placeholder="Enter a book title..." 
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                        required
+                    >
+                </div>
+                
+                <button 
+                    type="submit" 
+                    class="w-full bg-green-700 text-white py-3 rounded-lg font-semibold hover:bg-green-800 transition duration-300"
+                >
+                    Get Recommendations
+                </button>
+            </form>
+        </div>
+
+        <!-- Results Section -->
+        {% if data %}
+        <div class="mt-16">
+            <h2 class="text-3xl font-bold text-center mb-2">Recommended Books</h2>
+            <p class="text-gray-600 text-center mb-12">Books similar to your selection</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {% for item in data %}
+                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition duration-300">
+                    <div class="relative">
+                        <img src="{{ item[2] }}" alt="Book Cover" class="w-full h-64 object-cover">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2">{{ item[0] }}</h3>
+                        <p class="text-gray-600 mb-4">by {{ item[1] }}</p>
+                        <button class="w-full bg-green-700 text-white py-2 rounded-lg hover:bg-green-800 transition duration-300">
+                            View Details
+                        </button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12 mt-16">
+        <div class="container mx-auto px-4">
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2023 BookVault. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById("menu-toggle").addEventListener("click", function () {
+            document.getElementById("mobile-menu").classList.toggle("hidden");
+        });
+    </script>
+</body>
+</html>
