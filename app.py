@@ -5,21 +5,13 @@ import os
 
 app = Flask(__name__)
 
-# Debug info
-print("Current working directory:", os.getcwd())
-print("Templates path:", os.path.join(os.getcwd(), 'templates'))
-print("Files in templates folder:", os.listdir(os.path.join(os.getcwd(), 'templates')))
-
-# Load your data
+# Load models
 try:
-    popular_df = pickle.load(open('models/popular.pkl','rb'))
-    pt = pickle.load(open('models/pt.pkl','rb'))
-    similarity_scores = pickle.load(open('models/similarity_scores.pkl','rb'))
-    books = pickle.load(open('models/books.pkl','rb'))
-    print("All model files loaded successfully")
-except Exception as e:
-    print(f"Error loading model files: {e}")
-    # Create dummy data for demonstration
+    popular_df = pickle.load(open('./models/popular.pkl','rb'))
+    pt = pickle.load(open('./models/pt.pkl','rb'))
+    similarity_scores = pickle.load(open('./models/similarity_scores.pkl','rb'))
+    books = pickle.load(open('./models/books.pkl','rb'))
+except:
     popular_df = None
     pt = None
     similarity_scores = None
@@ -27,7 +19,6 @@ except Exception as e:
 
 @app.route('/')
 def index():
-    print("Home page accessed")
     if popular_df is None:
         return render_template('index.html',
                            book_name=["Demo Book 1", "Demo Book 2", "Demo Book 3"],
@@ -49,17 +40,13 @@ def index():
 
 @app.route('/recommend')
 def recommend_ui():
-    print("Recommend UI page accessed")
     return render_template('recommend.html')
 
 @app.route('/recommend_books', methods=['POST'])
 def recommend_books():
-    print("Recommend books endpoint accessed")
     user_input = request.form.get('user_input')
-    print(f"User searched for: {user_input}")
     
     if pt is None:
-        # Demo mode - return sample recommendations
         data = [
             ["The Silent Echo", "Elizabeth Morgan", "https://images.unsplash.com/photo-1544947950-fa07a98d237f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80"],
             ["Beyond the Horizon", "Michael Reeves", "https://images.unsplash.com/photo-1536746803623-cef87080c7b2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80"],
@@ -68,10 +55,7 @@ def recommend_books():
         return render_template('recommend.html', data=data, search_query=user_input)
     
     try:
-        # Find the index of the book
         index = np.where(pt.index == user_input)[0][0]
-        
-        # Get similar items
         similar_items = sorted(list(enumerate(similarity_scores[index])), key=lambda x: x[1], reverse=True)[1:6]
         
         data = []
@@ -81,23 +65,14 @@ def recommend_books():
             item.extend(list(temp_df.drop_duplicates('Book-Title')['Book-Title'].values))
             item.extend(list(temp_df.drop_duplicates('Book-Title')['Book-Author'].values))
             item.extend(list(temp_df.drop_duplicates('Book-Title')['Image-URL-M'].values))
-            
             data.append(item)
         
         return render_template('recommend.html', data=data, search_query=user_input)
     
     except IndexError:
-        # Book not found in the dataset
-        return render_template('recommend.html', error="Book not found in our database. Please try another title.", search_query=user_input)
+        return render_template('recommend.html', error="Book not found in our database", search_query=user_input)
     except Exception as e:
-        # Other errors
-        print(f"Error in recommendation: {e}")
-        return render_template('recommend.html', error="An error occurred. Please try again.", search_query=user_input)
-
-# Add a test route to verify the recommendation page is working
-@app.route('/test_recommend')
-def test_recommend():
-    return "Test recommend route is working! <a href='/recommend'>Go to actual recommend page</a>"
+        return render_template('recommend.html', error="An error occurred", search_query=user_input)
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    app.run(debug=True)

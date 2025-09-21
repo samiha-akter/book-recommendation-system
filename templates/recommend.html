@@ -111,42 +111,5 @@
         </div>
       </div>
     </footer>
-
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        const form = document.querySelector("form");
-
-        form.addEventListener("submit", async function (e) {
-          e.preventDefault();
-
-          const formData = new FormData(form);
-          const userInput = formData.get("user_input");
-
-          try {
-            const response = await fetch("/api/recommend", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({ user_input: userInput }),
-            });
-
-            const data = await response.json();
-
-            if (data.error) {
-              // Show error message
-              alert(data.error);
-            } else {
-              // Display results (you'll need to implement this)
-              console.log("Recommendations:", data.data);
-              alert("Check console for recommendations data");
-            }
-          } catch (error) {
-            console.error("Error:", error);
-            alert("An error occurred. Please try again.");
-          }
-        });
-      });
-    </script>
   </body>
 </html>

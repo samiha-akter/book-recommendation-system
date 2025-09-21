@@ -56,34 +56,22 @@ pip install -r requirements.txt
 
 4. Download the dataset from Kaggle and place it in the `data/` directory
 
-5. Run the training notebook to generate the model files:
-```bash
-jupyter notebook notebooks/book_recommendation_model.ipynb
-```
-
-6. Start the Flask application:
+5. Start the Flask application:
 ```bash
 python app.py
 ```
 
-7. Open your browser and navigate to `http://localhost:5000`
+6. Open your browser and navigate to `http://localhost:5000`
 
 ## Project Structure
 
 ```cmd
 book-recommendation-system/
-│
-├── api/
-│   └── index.py                 # Serverless function handler
+│           
 ├── app.py                       # Flask application
 ├── requirements.txt             # Python dependencies
 ├── vercel.json                  # Vercel configuration
 ├── runtime.txt                  # Python runtime specification
-│
-├── data/                        # Dataset directory
-│   ├── Books.csv
-│   ├── Users.csv
-│   └── Ratings.csv
 │
 ├── models/                      # Trained models
 │   ├── popular.pkl
@@ -114,17 +102,3 @@ The recommendation system uses a collaborative filtering approach:
 3. **Similarity Calculation**: Using cosine similarity to find similar books
 4. **Recommendation Generation**: Generating top-N recommendations based on similarity scores
 
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## License
-
-This project is licensed under the MIT License.
-
-## Acknowledgments
-
-- Dataset provided by [Kaggle Book Recommendation Dataset](https://www.kaggle.com/datasets/arashnic/book-recommendation-dataset)
-- Icons by [Font Awesome](https://fontawesome.com/)
-- Styling with [Tailwind CSS](https://tailwindcss.com/)
-- Book images from [Unsplash](https://unsplash.com/)
