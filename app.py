@@ -1,25 +1,33 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request
 import pickle
 import numpy as np
 import os
 
+app = Flask(__name__)
+
+# Debug info
+print("Current working directory:", os.getcwd())
+print("Templates path:", os.path.join(os.getcwd(), 'templates'))
+print("Files in templates folder:", os.listdir(os.path.join(os.getcwd(), 'templates')))
+
 # Load your data
 try:
-    popular_df = pickle.load(open('popular.pkl','rb'))
-    pt = pickle.load(open('pt.pkl','rb'))
-    similarity_scores = pickle.load(open('similarity_scores.pkl','rb'))
-    books = pickle.load(open('books.pkl','rb'))
-except:
-    # Create dummy data for demonstration if files not found
+    popular_df = pickle.load(open('models/popular.pkl','rb'))
+    pt = pickle.load(open('models/pt.pkl','rb'))
+    similarity_scores = pickle.load(open('models/similarity_scores.pkl','rb'))
+    books = pickle.load(open('models/books.pkl','rb'))
+    print("All model files loaded successfully")
+except Exception as e:
+    print(f"Error loading model files: {e}")
+    # Create dummy data for demonstration
     popular_df = None
     pt = None
     similarity_scores = None
     books = None
 
-app = Flask(__name__)
-
 @app.route('/')
 def index():
+    print("Home page accessed")
     if popular_df is None:
         return render_template('index.html',
                            book_name=["Demo Book 1", "Demo Book 2", "Demo Book 3"],
@@ -41,11 +49,14 @@ def index():
 
 @app.route('/recommend')
 def recommend_ui():
+    print("Recommend UI page accessed")
     return render_template('recommend.html')
 
 @app.route('/recommend_books', methods=['POST'])
-def recommend():
+def recommend_books():
+    print("Recommend books endpoint accessed")
     user_input = request.form.get('user_input')
+    print(f"User searched for: {user_input}")
     
     if pt is None:
         # Demo mode - return sample recommendations
@@ -80,8 +91,13 @@ def recommend():
         return render_template('recommend.html', error="Book not found in our database. Please try another title.", search_query=user_input)
     except Exception as e:
         # Other errors
+        print(f"Error in recommendation: {e}")
         return render_template('recommend.html', error="An error occurred. Please try again.", search_query=user_input)
 
-# This is required for Vercel to recognize the app
+# Add a test route to verify the recommendation page is working
+@app.route('/test_recommend')
+def test_recommend():
+    return "Test recommend route is working! <a href='/recommend'>Go to actual recommend page</a>"
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=5000)

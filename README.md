@@ -68,6 +68,37 @@ python app.py
 
 7. Open your browser and navigate to `http://localhost:5000`
 
+## Project Structure
+
+```cmd
+book-recommendation-system/
+│
+├── api/
+│   └── index.py                 # Serverless function handler
+├── app.py                       # Flask application
+├── requirements.txt             # Python dependencies
+├── vercel.json                  # Vercel configuration
+├── runtime.txt                  # Python runtime specification
+│
+├── data/                        # Dataset directory
+│   ├── Books.csv
+│   ├── Users.csv
+│   └── Ratings.csv
+│
+├── models/                      # Trained models
+│   ├── popular.pkl
+│   ├── pt.pkl
+│   ├── similarity_scores.pkl
+│   └── books.pkl
+│
+├── book_recommendation_model.ipynb
+│
+│
+└── templates/                   # HTML pages
+    ├── index.html
+    └── recommend.html
+```
+
 ## API Endpoints
 
 - `GET /` - Homepage with popular books
